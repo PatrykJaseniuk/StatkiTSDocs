@@ -41,7 +41,7 @@ const sygnalWejsciowy = getWejscie();
 const nowyStan = funkcjaPrzejscia(aktualnyStan, sygnalWejsciowy);
 const wyjscie = funkcjaWyjscia(nowyStan);
 setWyjscie(wyjscie); //np. render
-return nowyStan;
+autmatMoora(nowyStan, funkcjaPrzejscia, funkcjaWyjscia, getWejscie, setWyjscie);
 }
 ```
 
