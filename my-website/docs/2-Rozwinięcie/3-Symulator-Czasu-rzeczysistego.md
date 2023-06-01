@@ -131,7 +131,7 @@ private transitionFunction() {
             // this.collisionSystemDuration += mesureTime(() => collisionSystem.update(), 1);
             // this.dynamicCollidingPolygonsDuration += mesureTime(() => dynamicCollidingPolygons.update(), 1)
             // this.dynamicCollidingTrianglesDuration += mesureTime(() => dynamicCollindingTriangles.update(), 1);
-            // wraper mesurTime służy do pomiaru wydajności
+            // wraper mesureTime służy do pomiaru wydajności
             this.springInteractionsDuration += mesureTime(() => springInteractions.update(), 1);
             this.frictionInteractionsDuration += mesureTime(() => frictionInteractions.update(), 1);
             this.dynamicElementsDuration += mesureTime(() => dynamicElements.update(SimulationMaximumDT), 1);
