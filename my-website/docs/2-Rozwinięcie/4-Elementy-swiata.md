@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-# Elementy świata
+ # Elementy świata
 
-## świat
+ ## świat
 
 `Elementy świata` posiadają referencje do innych elementów świata. Tworzą w ten sposób strukturę danych (świat).
 Tak wygląda diagram klas Elementów świata:
@@ -17,10 +17,7 @@ daigram obiektów
 
 Ogólnym założeniem jest stworzenie symulacji w której model fizyczny jest zbudowany z molekułów, które są związana oddziaływaniami ([Soft-body dynamics](https://en.wikipedia.org/wiki/Soft-body_dynamics)). Dzięki temu elementy statku będą mogły bardziej realistycznie się zachowywać np.żagiel wyginać przy silnym wietrze .   
 
-
-### Wybrane Elementy świata
-
-#### Position
+## Position
 ```ts
 export class Position {
     value: Vector2 = new Vector2(0, 0);
@@ -31,7 +28,7 @@ export class Position {
 ```
 Pozycja jest tylko daną, nie posiada metod.
 
-#### ViewPoint
+## ViewPoint
 ```ts
 export class ViewPoint implements View {
     readonly position: Position;
@@ -62,7 +59,7 @@ export class ViewPoint implements View {
 Ten element przechowuje informacje potrzebne do renderowania obiektu na ekranie. `update` 'tłumaczy' z pozycję elementu zapisanego w formie wykorzystywanej prze inne elementy tego systemu do zrozumiałej przez `Three.js`.   
 
 
-#### DynamicElement
+## DynamicElement
 ```ts
 export class DynamicElement {
     force = new Vector2(0, 0);
@@ -103,7 +100,7 @@ export class DynamicElement {
 Jest to jeden z ważniejszych elementów świata. Przechowuje on informacje o prędkości, przyspieszeniu, masie, pędzie i sile, która działa na element. metoda `update` dokonuje [integracji numerycznej](https://en.wikipedia.org/wiki/Numerical_integration#Reasons_for_numerical_integration) [równań ruchu](https://en.wikipedia.org/wiki/Equations_of_motion) W ten sposób oblicza nowe wartości swoich atrybutów. Ten Obiekt nie implementuje `WorldElements` ponieważ korzysta ze zmodyfikowanej metody `update` która przyjmuje argument `dt` (delta time) czyli zmiana jaka będzie użyta w integracji.
 Należy uważać na prawidłową wartość `dt`. Zbyt mała może spowodować problemy z wydajnością, a zbyt duża może spowodować destabilizacje modelu dynamicznego tzn. model przestanie zachowywać stałe ruchu takie jak: zachowanie pędu, czy energii w skutek czego model się 'rozpadnie'.
 
-##### Stabilność modelu dynamiki
+### Stabilność modelu dynamiki
 
 Model jest stabilny, jeżeli zachowuje pęd
 
@@ -154,7 +151,7 @@ test('momentum conservation for for wsp = 2^(1/2)', () => {
 ```
 Jeżeli `maximumDt` pomnożę, chociaż przez `1.1` to system przestaje być stabilny. 👏
 
-#### Połączenie `DynamicElement`+ `Position`+ `ViewPoint`
+## Połączenie `DynamicElement`+ `Position`+ `ViewPoint`
 
 Jeżeli połączę te trzy elementy otrzymam obiekt który może przesuwać się (być przesuwany?) po ekranie.
 
@@ -171,16 +168,16 @@ gif
 ```
 Obiekt `position` jest jak komunikator który umożliwia współprace pomiędzy `dynamicElement`(nadpisuje `position`), a viewPoint(wyświetla na podstawie `position`).
 
-#### SpringInteraction
+## SpringInteraction
 
 obiekty klasy `SpringInteraction` odpowiadają za powstawanie sił pomiędzy elementami dynamicznymi. Ten element świata implementuje model sprężyny i tłumika([Mass-spring-damper model](https://en.wikipedia.org/wiki/Mass-spring-damper_model)). 
-##### Sprężyna
+### Sprężyna
 Sprężyna jest modelowana zgodnie z [prawem Hooke'a](https://en.wikipedia.org/wiki/Hooke%27s_law). Siła sprężystości jest proporcjonalna do odległości od punktu równowagi. 
 
-##### Tłumik
+### Tłumik
 Bez tłumienia obiekty drgały by bez przerwy co nie odzwierciedlało by dobrze rzeczywistość. Tłumik generuje [siłę tarcia](https://en.wikipedia.org/wiki/Friction) stała co do długości. Siła działa tylko wzdłuż tłumika i jest odwrotnie skierowana jak ruch tłumika.
 
-##### Implementacja:
+### Implementacja:
 ```ts
 export class SpringInteraction implements WorldElement {
     readonly dynamicElement0: DynamicElement;
@@ -237,7 +234,7 @@ function calculateDumperForceOn1(velocityShift: Vector2, dumperRate: number, poi
 }
 ```
 
-#### Dodanie Elementu springInteraction do świata
+## Dodanie Elementu springInteraction do świata
 
 Dodanie do świata elementu `SpringInteraction` Sprawia że elementy `DynamicElement` otrzymują wartość siły która na nie działą i z tego mogą wyznaczyć przyspieszenie.
 ```ts
@@ -260,7 +257,7 @@ Taka konstrukcja sprawi że obiekty będą poruszać się ruchem harmonicznym t�
 Właśnie te oddziaływania definiują jakie może być maksymalne `dt` aby model się nie rozpadł o czym już [wspomniałem](#stabilność-modelu-dynamiki).
 
 
-#### PositionRotation
+## PositionRotation
 Obiekt, który służy do przechowywania informacji o położeniu i rotacji obiektu(bryły)
 Skąd się bierze rotacja? o tym za chwilę
 ```ts
@@ -283,7 +280,7 @@ export class Rotation {
 }
 ```
 
-#### ViewTexture
+## ViewTexture
 Element świata podobny do `ViewPoint` ale zamiast kółka służy do wyświetlania tekstury. Do tego celu potrzebuje informacji o rotacji obiektu. 
 ```ts
 export class ViewTexture implements View {
@@ -350,7 +347,7 @@ Do konstruktora mogę przesłać referencję na obiekt `PositionRotation`, albo 
 
 Metoda `onScaleUpdate` jest wykorzystywana np. do imitowania rozciągania żagli w zależności od prędkości wiatru.  
 
-#### Triangel
+## Triangel
 
 Jest to element świata, który służy do wyliczania rotacji i pozycji bryły stworzonej z trzech 
 `DynamicElenent` połączonych ze sobą za pomocą `SpringInteraction`. Chociaż sam model fizyki nie posiada przestrzeni rotacji (nie ma takich elementów jak moment bezwładności, czy moment siły),
@@ -390,7 +387,7 @@ export class Triangle implements WorldElement {
 ``` 
 
 W ten sposób uzyskuję rotacje potrzebną do wyświetlenia tekstury.
-##### Przykład
+### Przykład
 ```ts
 const position0 = new Position(new Vector2(0, 0));
 const position1 = new Position(new Vector2(0, 100));
@@ -415,7 +412,7 @@ dynamicElement0.velocity.value = new Vector2(100, 0);
 ```
 Taka konfiguracja spowoduje wyświetlenia na ekranie poruszającego się w prawo i obracającego się zgodnie z ruchem wskazówek zegara tekstury "assets/ship.png".
 
-#### FluidInteractor
+## FluidInteractor
 
 Element świata, który symuluję mechanikę płynów. Jest to element, który sprawia że żagle i ster generują siłę napędową.
 
@@ -489,7 +486,7 @@ W systemie Istnieją dwa rodzaje płynów: `Wind` i `Water`.
 ```
 Woda jest 100 razy gęstsza od powietrza, dlatego też siła napędowa generowana przez wiatr jest 100 razy mniejsza niż siła napędowa generowana przez wodę przy takich samych pozostałych parametrach.
 
-#### Ship
+## Ship
 Z powyższych elementów bazowych mam dużą swobodę w konstruowaniu różnych obiektów pływających. Oto implementacja statku występującego w aktualnej wersji symulacji:
 ```ts
 export class Ship2 {
@@ -551,7 +548,7 @@ Najważniejsze Elementy Statku to:
 + sword - `Ster` -> obiekt który jest 'przypięty' do kadłuba na środku i oddziałuje z wodą, nie może się obracać.
 + ster - `Ster` -> obiekt który jest 'przypięty' do kadłuba z tyłu i może się obracać.  
 
-##### Kadłub
+### Kadłub
 Łączy ze sobą wszystkie elementy statku
 ```ts
 export class Hull2 {
@@ -601,7 +598,7 @@ export class Hull2 {
 ```
 `DynamicCollidingPolygon` to klasa która generuje bryłę z podanych punktów, po przez związanie ich za pomocą  `SpringInteraction`. Ponadto obiekt ten potrafi kolidować z innymi, niestety funkcjonalność ta została wyłączona ponieważ nie jest zbyt wydajna. Znajduje się tutaj już obiekt definiujący wygląd - zwykła przyklejona tekstura. Model kadłuba realizuje [soft body dynammics](https://en.wikipedia.org/wiki/Soft-body_dynamics), czyli jest elastyczny. Jadnak z braku czasu nie zaimplementowałem takiego wyglądu.
 
-##### Żagiel
+### Żagiel
 ```ts
 class Sail {
     yardView: ViewTexture;
@@ -675,7 +672,7 @@ class Sail {
 ```
 Sam żagiel jest bryłą zbudowaną z czterech `DynamicElement` i `SpringInteraction` pomiędzy nimi. Do masztu jest doczepiony `FluidInteractor`. Tekstura żagla jest skalowana w zależności od siły która na niego działa. Żagiel może być zwijany i rozwijany.
 
-##### Ster
+### Ster
 ```ts
 class Ster {
     dynamicElement: DynamicElement;
@@ -710,7 +707,7 @@ class Ster {
 ```
 Ster Jest prostszy od żagla. Nie jest bryłą, składa sią z tylko jednego `DynamicElement`. Do niego jest doczepiony `FluidInteractor`. Ster może być obracany. Rotacja steru w przestrzeni świata jest wyliczana na podstawie rotacji statku i rotacji steru względem statku.
 
-#### Collisions
+## Collisions
 
 System Posiada zaimplementowany model kolizji, jednakże nie spełnia wymagań wydajności, więc nie będą go omawiał.
 
