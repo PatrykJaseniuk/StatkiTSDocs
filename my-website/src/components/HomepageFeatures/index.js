@@ -14,7 +14,7 @@ const FeatureList = [
   },
   {
     title: 'Miecz i Ster',
-    imgSource: 'img/ster.gif',
+    imgSource: 'Statek.mp4',
     description: (
       <>
         Miecz i ster produkują siłę napędową z prądu wody.
@@ -37,9 +37,10 @@ function Feature({ imgSource, title, description }) {
     <div className={clsx('col col--4')}>
       <div className="text--center">
         {/* wyświetl gif */}
-        <img src={imgSource} alt="StatkiTS" style={{
+        <video autoPlay src={imgSource} alt="StatkiTS" style={{
           // przytnij w koło
           borderRadius: '50%',
+
         }} />
 
 

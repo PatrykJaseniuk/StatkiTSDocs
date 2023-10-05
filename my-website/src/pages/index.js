@@ -40,10 +40,9 @@ function HomepageHeader() {
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <div
+    <Background
+      imgSrc={'Statek.mp4'}
       style={{
-        backgroundImage: `url(img/plakat.png)`,
-        backgroundSize: 'cover',
         height: '100vh',
       }}>
       <Layout
@@ -52,13 +51,38 @@ export default function Home() {
       >
         <div >
           <HomepageHeader />
-          <HomepageFeatures />
+          {/* <HomepageFeatures /> */}
         </div>
         <main  >
         </main>
       </Layout>
-    </div>
+    </Background>
 
 
   );
+}
+
+
+const Background = ({ children, imgSrc, style }) => {
+  return (
+    <div style={{ position: 'relative' }}>
+      <div style={{
+        position: 'absolute',
+        height: '100%',
+        width: '100%',
+      }}>
+        <video autoPlay src={imgSrc} style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: 0.7,
+          ...style
+
+        }} />
+      </div>
+      <div style={{ position: 'relative' }}>
+        {children}
+      </div>
+    </div>
+  )
 }
